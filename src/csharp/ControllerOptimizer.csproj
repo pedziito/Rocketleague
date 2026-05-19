@@ -15,7 +15,6 @@
     <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
     <PackageReference Include="MaterialDesignColors" Version="2.5.0" />
   </ItemGroup>
-  </ItemGroup>
 
     <Target Name="CopyControllerEngineDll" AfterTargets="Build">
       <PropertyGroup>
