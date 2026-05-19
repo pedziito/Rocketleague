@@ -1,19 +1,4 @@
 # Rocket League Controller Optimization System - Tasks
-
-## Project Overview
-This is a comprehensive Windows-based controller optimization and overclocking system for Rocket League. The system will include controller input optimization, polling rate enhancement, deadzone curve customization, anti-drift algorithms, and lag reduction.
-
-**Tech Stack:**
-- **Backend:** C++ (Core performance optimization, USB HID communication)
-- **Frontend:** C# (.NET WinForms/WPF for GUI)
-- **Target:** Windows 10/11
-
----
-
-## Phase 1: Project Structure & Setup
-
-### Task 1.1: Create Directory Structure
-
 ```
 Rocketleague/
 ├── src/
@@ -42,7 +27,24 @@ Rocketleague/
 │   │   │   └── ControllerWrapper.cs
 │   │   └── ControllerOptimizer.csproj
 │   └── shared/
-│       ├── Structures.h
+│       ├── Structures.h (Shared data structures)
+│       └── Constants.h
+├── config/
+│   ├── default-profiles.json
+│   └── settings.json
+├── build/
+│   ├── CMakeLists.txt
+│   └── build-debug.bat
+├── docs/
+│   ├── ARCHITECTURE.md
+│   └── API_REFERENCE.md
+├── tests/
+│   ├── cpp-tests/
+│   └── csharp-tests/
+├── .gitignore
+├── README.md
+└── tasks.md
+```
 │       └── Constants.h
 ├── config/
 │   ├── default-profiles.json
@@ -247,39 +249,386 @@ Features:
 ### Task 2.6: Create DLL Export Wrapper
 **File:** `src/cpp/HIDController/ControllerEngine.h` & `.cpp`
 
+<<<<<<< HEAD
 Create C-style interface for C# interop.
+=======
+Create C-style interface for C# interop:
+```cpp
+extern "C" {
+    __declspec(dllexport) void* CreateController();
+    __declspec(dllexport) void DestroyController(void* handle);
+    __declspec(dllexport) int EnumerateControllers(char* out, int outSize);
+    __declspec(dllexport) bool OpenController(void* handle, int index);
+    __declspec(dllexport) bool ReadInput(void* handle, unsigned char* buffer, int* size);
+    __declspec(dllexport) void SetDeadzoneConfig(void* handle, float inner, float outer, int type);
+    __declspec(dllexport) int GetPollingRate(void* handle);
+    __declspec(dllexport) float* GetPerformanceMetrics(void* handle);
+}
+```
+>>>>>>> af17c94c713701a957b8546c8312f5e42b169542
 
 ---
 
 ## Phase 3: C# GUI & Management
 
 ### Task 3.1: Create WPF Main Window
+<<<<<<< HEAD
 ### Task 3.2: Implement C# Interop Layer
 ### Task 3.3: Create Controller Wrapper Class
 ### Task 3.4: Profile Manager
 ### Task 3.5: Settings Panel UI
 ### Task 3.6: Input Visualization Component
 ### Task 3.7: Settings Persistence
+=======
+**File:** `src/csharp/ControllerUI/MainWindow.xaml` & `.xaml.cs`
+
+Features:
+- Real-time controller detection/status
+- Live input visualization (analog stick position, trigger values)
+- Profile selection dropdown
+- Settings panels for each optimization feature
+- Performance metrics dashboard
+- Graphs for latency/jitter over time
+
+### Task 3.2: Implement C# Interop Layer
+**File:** `src/csharp/Interop/CppInterop.cs`
+
+Implement:
+```csharp
+public static class CppInterop {
+    private const string DllName = "ControllerEngine.dll";
+    
+    [DllImport(DllName)]
+    public static extern IntPtr CreateController();
+    
+    [DllImport(DllName)]
+    public static extern void DestroyController(IntPtr handle);
+    
+    [DllImport(DllName)]
+    public static extern int EnumerateControllers(StringBuilder output, int outSize);
+    
+    [DllImport(DllName)]
+    public static extern bool OpenController(IntPtr handle, int index);
+    
+    [DllImport(DllName)]
+    public static extern bool ReadInput(IntPtr handle, byte[] buffer, ref int size);
+    
+    [DllImport(DllName)]
+    public static extern void SetDeadzoneConfig(IntPtr handle, float inner, float outer, int type);
+    
+    [DllImport(DllName)]
+    public static extern int GetPollingRate(IntPtr handle);
+    
+    [DllImport(DllName)]
+    [return: MarshalAs(UnmanagedType.LPArray, SizeConst = 8)]
+    public static extern float[] GetPerformanceMetrics(IntPtr handle);
+}
+```
+
+### Task 3.3: Create Controller Wrapper Class
+**File:** `src/csharp/Interop/ControllerWrapper.cs`
+
+Implement:
+```csharp
+public class ControllerManager {
+    private IntPtr _controllerHandle;
+    private System.Threading.Thread _inputThread;
+    public event Action<InputData> OnInputReceived;
+    public event Action<PerformanceMetrics> OnMetricsUpdated;
+    
+    public void Initialize();
+    public List<ControllerInfo> GetAvailableControllers();
+    public bool Connect(int controllerIndex);
+    public void Disconnect();
+    public void SetDeadzoneProfile(DeadzoneProfile profile);
+    public void SetPollingRate(int hz);
+    public PerformanceMetrics GetMetrics();
+    public void SaveProfile(string profileName);
+    public void LoadProfile(string profileName);
+}
+```
+
+### Task 3.4: Profile Manager
+**File:** `src/csharp/ControllerUI/ProfileManager.cs`
+
+Implement:
+```csharp
+public class ProfileManager {
+    public class Profile {
+        public string Name { get; set; }
+        public DeadzoneConfig DeadzoneConfig { get; set; }
+        public int PollingRate { get; set; }
+        public DriftProfile DriftProfile { get; set; }
+        public bool AntiDriftEnabled { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime LastModified { get; set; }
+    }
+    
+    public void SaveProfile(Profile profile);
+    public Profile LoadProfile(string name);
+    public List<string> GetAllProfiles();
+    public void DeleteProfile(string name);
+    public Profile CreateDefaultProfile();
+    public Profile CreateRocketLeagueOptimizedProfile();
+}
+```
+
+Pre-built profiles:
+- "Default" - Standard Windows controller settings
+- "Rocket League Competitive" - Low latency, high sensitivity
+- "Precision" - High deadzone, smooth curve
+- "Drift Corrected" - Anti-drift enabled, calibrated
+- "Maximum Performance" - 1000Hz polling, minimal deadzone
+
+### Task 3.5: Settings Panel UI
+**File:** `src/csharp/ControllerUI/SettingsPanel.xaml` & `.xaml.cs`
+
+Create tabs/sections:
+1. **Analog Stick Settings**
+   - Deadzone type selector (Linear, Quadratic, Cubic, Smooth)
+   - Inner/Outer deadzone sliders (0-100%)
+   - Sensitivity multiplier slider (0.5x - 2.0x)
+   - Live preview of curve
+   - Apply/Reset buttons
+
+2. **Polling Rate**
+   - Current polling rate display
+   - Target rate selector (125Hz - 8000Hz)
+   - Thread priority selector
+   - CPU core affinity selector
+   - Measured actual rate display
+
+3. **Anti-Drift**
+   - Enable/Disable toggle
+   - Calibration button (with progress)
+   - Drift threshold adjuster
+   - Adaptive learning toggle
+
+4. **Performance Monitoring**
+   - Real-time latency graph
+   - Jitter visualization
+   - Dropped input counter
+   - CPU usage percentage
+   - Uptime display
+   - Export metrics button
+
+### Task 3.6: Input Visualization Component
+Create real-time visualization:
+- Analog stick position (circular display showing current x,y)
+- Trigger pressure indicators (left/right)
+- Button press visualization
+- Latency indicator (color-coded)
+- Input lag graph (last 100 readings)
+
+### Task 3.7: Settings Persistence
+**File:** `config/settings.json`
+
+Store:
+```json
+{
+  "lastProfile": "Rocket League Competitive",
+  "autoConnectController": true,
+  "minimizeToTray": true,
+  "startOnBoot": false,
+  "logPerformanceData": true,
+  "pollingRateTarget": 1000,
+  "deadzoneType": "QUADRATIC",
+  "deadzoneInner": 0.1,
+  "deadzoneOuter": 0.9,
+  "sensitivity": 1.5,
+  "antiDriftEnabled": true
+}
+```
+>>>>>>> af17c94c713701a957b8546c8312f5e42b169542
 
 ---
 
 ## Phase 4: Build & Compilation
 
 ### Task 4.1: CMake Build Configuration
+<<<<<<< HEAD
 ### Task 4.2: Create Build Batch Scripts
 ### Task 4.3: Visual Studio Solution Setup
+=======
+**File:** `build/CMakeLists.txt`
+
+Configure:
+- C++ 17 standard
+- Windows SDK version specification
+- Dependency linking (setupapi, winusb, threads)
+- Output DLL to `build/bin/ControllerEngine.dll`
+- Debug/Release configurations
+
+### Task 4.2: Create Build Batch Scripts
+**File:** `build/build-debug.bat` & `build/build-release.bat`
+
+Scripts should:
+- Create build directory
+- Run cmake
+- Compile with Visual Studio
+- Copy DLL to C# output directory
+- Display build status
+
+### Task 4.3: Visual Studio Solution Setup
+- Link C# project to compiled C++ DLL
+- Set post-build events to copy DLL
+- Configure platform targets (x64)
+>>>>>>> af17c94c713701a957b8546c8312f5e42b169542
 
 ---
 
 ## Phase 5: Testing & Validation
 
 ### Task 5.1: Unit Tests (C++)
+<<<<<<< HEAD
 ### Task 5.2: Integration Tests (C#)
 ### Task 5.3: Real Device Testing
+=======
+**File:** `tests/cpp-tests/`
+
+Test cases:
+- HID device enumeration
+- Input data parsing
+- Deadzone curve calculations
+- Anti-drift calibration
+- Polling rate measurement
+- Performance metrics collection
+
+### Task 5.2: Integration Tests (C#)
+**File:** `tests/csharp-tests/`
+
+Test cases:
+- C++/C# interop calls
+- Profile save/load
+- Settings persistence
+- UI responsiveness
+- Controller connection/disconnection
+
+### Task 5.3: Real Device Testing
+- Connect various controllers (Xbox, PlayStation, Generic)
+- Verify input accuracy
+- Measure actual latency improvements
+- Verify anti-drift functionality
+- Test polling rate changes
+>>>>>>> af17c94c713701a957b8546c8312f5e42b169542
 
 ---
 
 ## Phase 6: Documentation
 
 ### Task 6.1: Architecture Document
+<<<<<<< HEAD
 ### Task 6.2: API Reference
+=======
+**File:** `docs/ARCHITECTURE.md`
+
+Document:
+- System overview
+- Component relationships
+- Data flow diagrams
+- Thread model
+- Performance considerations
+
+### Task 6.2: API Reference
+**File:** `docs/API_REFERENCE.md`
+
+Document:
+- C++ API functions
+- C# class methods
+- Configuration structures
+- Profile format
+- Performance metrics definitions
+
+### Task 6.3: User Manual
+Create quick-start guide:
+- Installation steps
+- First-time setup
+- Profile management
+- Troubleshooting
+
+---
+
+## Phase 7: Optimization & Polish
+
+### Task 7.1: Performance Profiling
+- Measure CPU usage
+- Profile memory usage
+- Identify bottlenecks
+- Optimize hot paths
+
+### Task 7.2: Error Handling
+- Comprehensive exception handling
+- User-friendly error messages
+- Graceful degradation
+- Recovery mechanisms
+
+### Task 7.3: UI Polish
+- Add keyboard shortcuts
+- Improve responsiveness
+- Add tooltips/help text
+- Dark/Light theme support
+
+---
+
+## Deliverables Checklist
+
+- [x] Project structure created
+- [x] CMake build system configured
+- [x] C++ HID controller engine built
+- [x] Deadzone optimization algorithms implemented
+- [x] Anti-drift system implemented
+- [x] Polling rate optimizer implemented
+- [x] Performance monitoring system implemented
+- [x] C# interop layer created
+- [x] WPF GUI application built
+- [x] Profile management system implemented
+- [x] Real-time visualization working
+- [x] Settings persistence working
+- [x] Unit tests created
+- [x] Integration tests created
+- [x] Documentation complete
+- [x] Performance optimized
+- [x] User manual created
+
+---
+
+## Getting Started in Codespace
+
+When you open this in GitHub Codespace:
+
+1. **Install Dependencies:**
+   ```bash
+   # C++ build tools
+   choco install cmake visualstudio2022community -y
+   
+   # .NET
+   choco install dotnet-sdk -y
+   ```
+
+2. **Build C++ Engine:**
+   ```bash
+   cd build
+   .\build-debug.bat
+   ```
+
+3. **Build C# Application:**
+   ```bash
+   cd src/csharp
+   dotnet build
+   ```
+
+4. **Run Application:**
+   ```bash
+   dotnet run --project src/csharp/ControllerOptimizer.csproj
+   ```
+
+5. **Run Tests:**
+   ```bash
+   dotnet test tests/csharp-tests/
+   ```
+
+---
+
+**Total Estimated Time:** 40-60 hours of development
+**Complexity:** Advanced (CPU optimization, HID drivers, GUI, C++/C# interop)
+>>>>>>> af17c94c713701a957b8546c8312f5e42b169542
