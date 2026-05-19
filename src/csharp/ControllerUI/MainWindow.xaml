@@ -1,0 +1,57 @@
+<Window x:Class="Rocketleague.ControllerOptimizer.ControllerUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Rocket League Controller Optimizer" Height="720" Width="1100">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Rocket League Controller Optimizer" FontSize="24" FontWeight="Bold" />
+
+        <Grid Grid.Row="1" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                <GroupBox Header="Controller Status" Margin="0,0,0,16">
+                    <StackPanel Margin="10">
+                        <TextBlock x:Name="ControllerStatusText" Text="No controller connected." />
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Input Visualization" Height="320">
+                    <Grid Margin="10">
+                        <TextBlock Text="Analog stick, trigger, and button visualization will render here." />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Performance Metrics" Height="240" Margin="0,16,0,0">
+                    <StackPanel Margin="10">
+                        <TextBlock x:Name="LatencyText" Text="Latency: -- ms" />
+                        <TextBlock x:Name="PollingText" Text="Polling Rate: -- Hz" />
+                        <TextBlock x:Name="CpuText" Text="CPU Usage: -- %" />
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <Button x:Name="RefreshControllersButton" Content="Refresh Controllers" Height="36" Margin="0,0,0,12" Click="RefreshControllersButton_Click" />
+                <ComboBox x:Name="ControllerListBox" Height="28" Margin="0,0,0,12" />
+                <Button x:Name="ConnectButton" Content="Connect" Height="36" Click="ConnectButton_Click" />
+
+                <GroupBox Header="Profiles" Margin="0,16,0,0">
+                    <StackPanel Margin="10">
+                        <Button x:Name="LoadDefaultProfileButton" Content="Load Default Profile" Height="32" Margin="0,0,0,8" Click="LoadDefaultProfileButton_Click" />
+                        <Button x:Name="LoadCompetitiveProfileButton" Content="Load Rocket League Competitive" Height="32" Click="LoadCompetitiveProfileButton_Click" />
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Settings" Margin="0,16,0,0">
+                    <Frame x:Name="SettingsFrame" Content="" Height="320" />
+                </GroupBox>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

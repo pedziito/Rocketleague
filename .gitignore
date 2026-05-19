@@ -1,0 +1,32 @@
+bin/
+obj/
+build/
+*.user
+*.suo
+*.cache
+*.log
+*.vs/
+.vscode/
+*.db
+*.pdb
+*.dll
+*.exe
+*.app
+*.vsconfig
+*.userosscache
+*.ide
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# VS Code
+.vscode/

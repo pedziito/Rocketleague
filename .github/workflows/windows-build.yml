@@ -1,0 +1,72 @@
+name: Windows Build and Package
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Configure CMake
+      run: cmake -S build -B build\\cmake-out -G "Visual Studio 17 2022" -A x64
+
+    - name: Build C++ DLL (Release)
+      run: cmake --build build\\cmake-out --config Release
+
+    - name: Restore and publish C# WPF app
+      run: |
+        dotnet restore src/csharp/ControllerOptimizer.csproj
+        dotnet publish src/csharp/ControllerOptimizer.csproj -c Release -r win-x64 -o published --self-contained false
+      shell: bash
+
+    - name: Copy ControllerEngine.dll to published folder
+      shell: powershell
+      run: |
+        $dll = Join-Path $PWD "build\\bin\\ControllerEngine.dll"
+        if (Test-Path $dll) {
+          Copy-Item -Path $dll -Destination (Join-Path $PWD "published\\ControllerEngine.dll") -Force
+        } else {
+          Write-Host "ControllerEngine.dll not found at $dll"
+          Exit 1
+        }
+
+    - name: Create ZIP package
+      shell: powershell
+      run: |
+        $zip = Join-Path $PWD "ControllerOptimizer-Windows.zip"
+        if (Test-Path $zip) { Remove-Item $zip -Force }
+        Compress-Archive -Path (Join-Path $PWD 'published\\*') -DestinationPath $zip -Force
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ControllerOptimizer-Windows
+        path: ControllerOptimizer-Windows.zip
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: windows-build-${{ github.run_number }}
+        release_name: ControllerOptimizer Windows Build ${{ github.run_number }}
+        body: "Automated Windows build and package. Includes ControllerEngine DLL and published WPF app."
+        draft: false
+        prerelease: false
+
+    - name: Upload ZIP to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ControllerOptimizer-Windows.zip
+        asset_name: ControllerOptimizer-Windows.zip
+        asset_content_type: application/zip

@@ -1,0 +1,13 @@
+{
+  "lastProfile": "Rocket League Competitive",
+  "autoConnectController": true,
+  "minimizeToTray": true,
+  "startOnBoot": false,
+  "logPerformanceData": true,
+  "pollingRateTarget": 1000,
+  "deadzoneType": "QUADRATIC",
+  "deadzoneInner": 0.1,
+  "deadzoneOuter": 0.9,
+  "sensitivity": 1.5,
+  "antiDriftEnabled": true
+}

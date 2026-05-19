@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AssemblyName>ControllerOptimizer</AssemblyName>
+    <RootNamespace>Rocketleague.ControllerOptimizer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
+    <PackageReference Include="MaterialDesignColors" Version="2.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="..\..\config\settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="App.xaml" />
+    <Page Include="ControllerUI\MainWindow.xaml" />
+    <Page Include="ControllerUI\SettingsPanel.xaml" />
+    <Compile Include="App.xaml.cs" />
+    <Compile Include="ControllerUI\MainWindow.xaml.cs" />
+    <Compile Include="ControllerUI\SettingsPanel.xaml.cs" />
+    <Compile Include="ControllerUI\ProfileManager.cs" />
+    <Compile Include="Interop\CppInterop.cs" />
+    <Compile Include="Interop\ControllerWrapper.cs" />
+  </ItemGroup>
+
+</Project>

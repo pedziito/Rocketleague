@@ -1,0 +1,46 @@
+[
+  {
+    "Name": "Default",
+    "DeadzoneConfig": {
+      "type": "LINEAR",
+      "innerDeadzone": 0.05,
+      "outerDeadzone": 0.95,
+      "sensitivity": 1.0,
+      "enableSmoothing": false,
+      "smoothingFactor": 0.5
+    },
+    "PollingRate": 500,
+    "DriftProfile": {
+      "driftThreshold": 0.03,
+      "calibrationTime": 5.0,
+      "enableAdaptive": false,
+      "offsetX": [0.0],
+      "offsetY": [0.0]
+    },
+    "AntiDriftEnabled": false,
+    "CreatedAt": "2026-05-19T00:00:00Z",
+    "LastModified": "2026-05-19T00:00:00Z"
+  },
+  {
+    "Name": "Rocket League Competitive",
+    "DeadzoneConfig": {
+      "type": "QUADRATIC",
+      "innerDeadzone": 0.03,
+      "outerDeadzone": 0.9,
+      "sensitivity": 1.4,
+      "enableSmoothing": true,
+      "smoothingFactor": 0.65
+    },
+    "PollingRate": 1000,
+    "DriftProfile": {
+      "driftThreshold": 0.02,
+      "calibrationTime": 3.0,
+      "enableAdaptive": true,
+      "offsetX": [0.0],
+      "offsetY": [0.0]
+    },
+    "AntiDriftEnabled": true,
+    "CreatedAt": "2026-05-19T00:00:00Z",
+    "LastModified": "2026-05-19T00:00:00Z"
+  }
+]
