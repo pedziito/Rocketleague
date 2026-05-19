@@ -22,10 +22,10 @@ jobs:
       run: cmake --build build\\cmake-out --config Release
 
     - name: Restore and publish C# WPF app
+      shell: powershell
       run: |
-        dotnet restore src/csharp/ControllerOptimizer.csproj
-        dotnet publish src/csharp/ControllerOptimizer.csproj -c Release -r win-x64 -o published --self-contained false
-      shell: bash
+        dotnet restore src\csharp\ControllerOptimizer.csproj
+        dotnet publish src\csharp\ControllerOptimizer.csproj -c Release -r win-x64 -o published --self-contained false
 
     - name: Copy ControllerEngine.dll to published folder
       shell: powershell
