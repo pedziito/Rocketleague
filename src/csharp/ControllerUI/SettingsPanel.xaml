@@ -8,7 +8,7 @@
     <Grid>
         <TabControl>
             <TabItem Header="Analog Stick">
-                <StackPanel Margin="10" Spacing="8">
+                <StackPanel Margin="10">
                     <TextBlock Text="Deadzone Type" />
                     <ComboBox SelectedIndex="0">
                         <ComboBoxItem>Linear</ComboBoxItem>
@@ -26,7 +26,7 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="Polling Rate">
-                <StackPanel Margin="10" Spacing="8">
+                <StackPanel Margin="10">
                     <TextBlock Text="Target Rate" />
                     <ComboBox SelectedIndex="2">
                         <ComboBoxItem>125 Hz</ComboBoxItem>
@@ -45,7 +45,7 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="Anti-Drift">
-                <StackPanel Margin="10" Spacing="8">
+                <StackPanel Margin="10">
                     <CheckBox Content="Enable Anti-Drift" IsChecked="True" />
                     <Button Content="Calibrate" Width="120" />
                     <TextBlock Text="Drift Threshold" />
@@ -54,7 +54,7 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="Performance">
-                <StackPanel Margin="10" Spacing="8">
+                <StackPanel Margin="10">
                     <TextBlock Text="Latency Graph" />
                     <Rectangle Height="100" Fill="#FF2D2D30" Stroke="#FF6E6E6E" />
                     <TextBlock Text="Jitter" />
