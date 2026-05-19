@@ -18,15 +18,15 @@ jobs:
     - name: Configure CMake
       shell: powershell
       run: |
-        $src = Join-Path $env:GITHUB_WORKSPACE "build"
-        $out = Join-Path $env:GITHUB_WORKSPACE "build\\cmake-out"
+        $src = Join-Path $env:GITHUB_WORKSPACE build
+        $out = Join-Path $env:GITHUB_WORKSPACE build\cmake-out
         Write-Host "Configuring CMake: source=$src out=$out"
         cmake -S "$src" -B "$out" -G "Visual Studio 17 2022" -A x64
 
     - name: Build C++ DLL (Release)
       shell: powershell
       run: |
-        $out = Join-Path $env:GITHUB_WORKSPACE "build\\cmake-out"
+        $out = Join-Path $env:GITHUB_WORKSPACE build\cmake-out
         cmake --build "$out" --config Release
 
     - name: Restore and publish C# WPF app
@@ -38,9 +38,10 @@ jobs:
     - name: Copy ControllerEngine.dll to published folder
       shell: powershell
       run: |
-        $dll = Join-Path $env:GITHUB_WORKSPACE "build\\bin\\ControllerEngine.dll"
+        $dll = Join-Path $env:GITHUB_WORKSPACE build\bin\ControllerEngine.dll
+        $publishedDir = Join-Path $env:GITHUB_WORKSPACE published
         if (Test-Path $dll) {
-          Copy-Item -Path $dll -Destination (Join-Path $PWD "published\\ControllerEngine.dll") -Force
+          Copy-Item -Path $dll -Destination (Join-Path $publishedDir ControllerEngine.dll) -Force
         } else {
           Write-Host "ControllerEngine.dll not found at $dll"
           Exit 1
@@ -49,9 +50,10 @@ jobs:
     - name: Create ZIP package
       shell: powershell
       run: |
-        $zip = Join-Path $PWD "ControllerOptimizer-Windows.zip"
+        $publishedDir = Join-Path $env:GITHUB_WORKSPACE published
+        $zip = Join-Path $env:GITHUB_WORKSPACE "ControllerOptimizer-Windows.zip"
         if (Test-Path $zip) { Remove-Item $zip -Force }
-        Compress-Archive -Path (Join-Path $PWD 'published\\*') -DestinationPath $zip -Force
+        Compress-Archive -Path (Join-Path $publishedDir '*') -DestinationPath $zip -Force
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
