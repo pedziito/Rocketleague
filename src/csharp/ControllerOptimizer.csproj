@@ -5,6 +5,9 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <AssemblyName>ControllerOptimizer</AssemblyName>
     <RootNamespace>Rocketleague.ControllerOptimizer</RootNamespace>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
@@ -12,8 +15,16 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
-    <PackageReference Include="MaterialDesignColors" Version="2.5.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.3.1" />
+    <PackageReference Include="MaterialDesignColors" Version="5.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\build\bin\ControllerEngine.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
+    </None>
   </ItemGroup>
 
     <Target Name="CopyControllerEngineDll" AfterTargets="Build">

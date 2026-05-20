@@ -36,7 +36,7 @@ jobs:
       shell: powershell
       run: |
         dotnet restore src\csharp\ControllerOptimizer.csproj
-        dotnet publish src\csharp\ControllerOptimizer.csproj -c Release -r win-x64 -o published --self-contained false
+        dotnet publish src\csharp\ControllerOptimizer.csproj -c Release -r win-x64 -o published --self-contained true /p:PublishSingleFile=true /p:IncludeAllContentForSelfExtract=true
 
     - name: Copy ControllerEngine.dll to published folder
       shell: powershell

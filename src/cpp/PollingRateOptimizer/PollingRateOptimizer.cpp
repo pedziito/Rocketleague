@@ -1,6 +1,7 @@
 #include "PollingRateOptimizer.h"
 #include <windows.h>
 #include <chrono>
+#include <algorithm>
 
 namespace rocket {
 
