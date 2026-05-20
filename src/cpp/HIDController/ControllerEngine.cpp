@@ -17,6 +17,32 @@ struct NativeControllerContext {
     std::vector<unsigned char> lastBuffer;
 };
 
+static std::string EscapeJsonString(const std::string& input) {
+    std::string output;
+    output.reserve(input.size() * 2);
+    for (char c : input) {
+        switch (c) {
+            case '\\': output += "\\\\"; break;
+            case '"': output += "\\\""; break;
+            case '\b': output += "\\b"; break;
+            case '\f': output += "\\f"; break;
+            case '\n': output += "\\n"; break;
+            case '\r': output += "\\r"; break;
+            case '\t': output += "\\t"; break;
+            default:
+                if (static_cast<unsigned char>(c) < 0x20) {
+                    char buf[7];
+                    sprintf(buf, "\\u%04x", static_cast<unsigned char>(c));
+                    output += buf;
+                } else {
+                    output += c;
+                }
+                break;
+        }
+    }
+    return output;
+}
+
 extern "C" {
 
 void* CreateController() {
@@ -38,9 +64,28 @@ int EnumerateControllers(char* out, int outSize) {
     if (!out) {
         return 0;
     }
-    std::string placeholder = "[]";
-    int count = std::min(static_cast<int>(placeholder.size()), std::max(0, outSize - 1));
-    memcpy(out, placeholder.data(), count);
+
+    rocket::HIDController hid;
+    auto controllers = hid.EnumerateControllers();
+    std::string json = "[";
+
+    for (size_t i = 0; i < controllers.size(); ++i) {
+        const auto& controller = controllers[i];
+        json += "{";
+        json += "\"deviceName\":\"" + EscapeJsonString(controller.deviceName) + "\",";
+        json += "\"devicePath\":\"" + EscapeJsonString(controller.devicePath) + "\",";
+        json += "\"vendorID\":" + std::to_string(controller.vendorID) + ",";
+        json += "\"productID\":" + std::to_string(controller.productID);
+        json += "}";
+        if (i + 1 < controllers.size()) {
+            json += ",";
+        }
+    }
+
+    json += "]";
+
+    int count = std::min(static_cast<int>(json.size()), std::max(0, outSize - 1));
+    memcpy(out, json.data(), count);
     out[count] = '\0';
     return count;
 }
