@@ -8,7 +8,10 @@ namespace Rocketleague.ControllerOptimizer.Interop
 {
     public class ControllerInfo
     {
+        [JsonProperty("deviceName")]
         public string Name { get; set; }
+
+        [JsonProperty("devicePath")]
         public string Path { get; set; }
     }
 
@@ -43,11 +46,23 @@ namespace Rocketleague.ControllerOptimizer.Interop
             _controllerHandle = CppInterop.CreateController();
         }
 
-        public List<ControllerInfo> GetAvailableControllers()
+        public (List<ControllerInfo> Controllers, string RawJson) GetAvailableControllers()
         {
             var output = new StringBuilder(4096);
             CppInterop.EnumerateControllers(output, output.Capacity);
-            return JsonConvert.DeserializeObject<List<ControllerInfo>>(output.ToString()) ?? new List<ControllerInfo>();
+            string rawJson = output.ToString();
+            var controllers = new List<ControllerInfo>();
+
+            try
+            {
+                controllers = JsonConvert.DeserializeObject<List<ControllerInfo>>(rawJson) ?? new List<ControllerInfo>();
+            }
+            catch (Exception ex)
+            {
+                rawJson += $"\nJSON parse error: {ex.Message}";
+            }
+
+            return (controllers, rawJson);
         }
 
         public bool Connect(int controllerIndex)

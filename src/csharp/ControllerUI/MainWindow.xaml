@@ -27,12 +27,15 @@
                         <TextBlock Text="Analog stick, trigger, and button visualization will render here." />
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Performance Metrics" Height="240" Margin="0,16,0,0">
+                <GroupBox Header="Performance Metrics" Height="200" Margin="0,16,0,0">
                     <StackPanel Margin="10">
                         <TextBlock x:Name="LatencyText" Text="Latency: -- ms" />
                         <TextBlock x:Name="PollingText" Text="Polling Rate: -- Hz" />
                         <TextBlock x:Name="CpuText" Text="CPU Usage: -- %" />
                     </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Debug Log" Height="260" Margin="0,16,0,0">
+                    <TextBox x:Name="DebugTextBox" Margin="10" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
                 </GroupBox>
             </StackPanel>
 
