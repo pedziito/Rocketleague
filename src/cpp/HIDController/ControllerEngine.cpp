@@ -3,8 +3,11 @@
 #include "InputProcessor.h"
 #include "AntiDrift.h"
 #include "../PerformanceMonitor/PerformanceMonitor.h"
+#include <string>
 #include <vector>
 #include <memory>
+#include <algorithm>
+#include <cstring>
 
 struct NativeControllerContext {
     std::unique_ptr<rocket::HIDController> hid;
@@ -36,7 +39,8 @@ int EnumerateControllers(char* out, int outSize) {
         return 0;
     }
     std::string placeholder = "[]";
-    int count = static_cast<int>(placeholder.copy(out, std::max(0, outSize - 1)));
+    int count = std::min(static_cast<int>(placeholder.size()), std::max(0, outSize - 1));
+    memcpy(out, placeholder.data(), count);
     out[count] = '\0';
     return count;
 }
