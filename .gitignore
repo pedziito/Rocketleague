@@ -1,6 +1,11 @@
 bin/
 obj/
 build/
+!build/
+!build/CMakeLists.txt
+!build/build-debug.bat
+!build/build-release.bat
+build/cmake-out/
 *.user
 *.suo
 *.cache
