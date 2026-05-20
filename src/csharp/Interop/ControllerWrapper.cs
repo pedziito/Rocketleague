@@ -48,9 +48,14 @@ namespace Rocketleague.ControllerOptimizer.Interop
 
         public (List<ControllerInfo> Controllers, string RawJson) GetAvailableControllers()
         {
-            var output = new StringBuilder(4096);
-            CppInterop.EnumerateControllers(output, output.Capacity);
-            string rawJson = output.ToString();
+            var output = new StringBuilder(131072);
+            int length = CppInterop.EnumerateControllers(output, output.Capacity);
+            string rawJson = length > 0 ? output.ToString(0, Math.Min(length, output.Capacity - 1)) : string.Empty;
+            if (length == output.Capacity - 1)
+            {
+                rawJson += "\n[Warning] EnumerateControllers result may be truncated. Increase buffer size if necessary.";
+            }
+
             var controllers = new List<ControllerInfo>();
 
             try
